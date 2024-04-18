@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Etickets</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PotpisDavorNajnova.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Movies" asp-action="Index">Bileti</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+
+
+                        <li class="navbar-nav flex-grow-1">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Movies" asp-action="Index"><i class="bi bi-film"></i> Movies</a>
+                        </li>
+                        <li class="navbar-nav flex-grow-3">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="Index"><i class="bi bi-film"></i> Payment</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-gear"></i> Management
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-controller="Cinemas" asp-action="Index"><i class="bi bi-camera-reels"></i> Cinemas</a>
+                                    <a class="dropdown-item" asp-controller="Producers" asp-action="Index"><i class="bi bi-headset"></i> Producers</a>
+                                    <a class="dropdown-item" asp-controller="Actors" asp-action="Index"><i class="bi bi-person-square"></i> Actors</a>
+                                </div>
+                            </li>
+                        }
+
+
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0" asp-controller="Movies" asp-action="Filter" method="get" style="padding-right: 25px;">
+                        <input name="searchTerm" id="searchid" type="text" class="form-control" value="@ViewBag.SearchTerm" placeholder="Search for a movie..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <input type="hidden" name="categoryId" value="@ViewBag.CategoryId" />
+
+                        <button class="btn btn-outline-success p-1 my-2 my-sm-0" type="submit">
+                            <img style="height:25px;width:25px" src="https://static.vecteezy.com/system/resources/previews/000/564/379/large_2x/vector-search-icon-sign.jpg" alt="Search">
+                        </button>
+
+                    </form>
+
+                    <partial name="_identity.cshtml" />
+
+                    @section Scripts{
+                        <script>
+
+                            let searchid = document.getElementById("searchid");
+                            let form-control=document.getElementById("form-control");
+
+
+                            searchid.addEventListener('input', function () {
+                                fetch(`/Search?query=${encodeURIComponent(query)}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Update the search results container with the data
+                                        searchResults.innerHTML = data;
+                                    })
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
+                            }
+
+
+                        </script>
+                    }
+
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top  text-muted position-fixed bottom-0 left-0 ">
+        <div class="container p-2">
+            &copy; 2023 - Tickets 
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
